@@ -1,12 +1,12 @@
- <h1>Ticket Info:</h1>
+fcomplere <h1>Ticket Info:</h1>
 
 
-    <h2>{{ticket.title}} <br>Filed by <a href="/user/{{ticket.filing_user.id}}"> {{ticket.filing_user}}</a></h2>
+    <h2>{{detail.title}} <br>Filed by <a href="/user/{{detail.author.id}}"> {{detail.author}}</a></h2>
     <br>
     <br>
-    <p>{{ticket.description}}</p>
-    <p>Date: {{ticket.date}} </p>
-    <p>Status: {{ticket.ticket_status}} </p>
+    <p>{{detail.description}}</p>
+    <p>Date: {{detail.date}} </p>
+    <p>Status: {{detail.ticket_status}} </p>
 
 
 <a href="/">Go back home</a> 

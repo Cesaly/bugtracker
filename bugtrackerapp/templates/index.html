@@ -25,46 +25,60 @@
         <h3><a href="/ticket/{{ticket.id}}">{{ ticket.title }}</a></h3>
             <p>{{ ticket.description }}</p>
             <p>Status: {{ticket.ticket_status}}</p>
-            <p>Assigned to: <a href="/user/{{ticket.assigned_user.id}}">{{ ticket.assigned_user }}</a></p>
-            <p>Filed by: <a href="/user/{{ticket.filing_user.id}}">{{ ticket.filing_user }}</a></p>
-            <p><a href="/edit/{{ticket.id}}">Edit this ticket...</a></p>
+            <p>Assigned to: <a href="/authorsview/{{ticket.ticket_assignee.id}}">{{ ticket.ticket_assignee }}</a></p>
+            <p>Filed by: <a href="/authorsview/{{ticket.ticket_finisher.id}}">{{ ticket.ticket_finisher }}</a></p>
+            <p><a href="/edit/{{ticket.id}}">EDIT TICKET</a></p>
 
     {% endfor %}
 
+<br>
+<br>
 
 <h2>In Progress Tickets</h2>
     {% for ticket in inprogress%}
         <h3><a href="/ticket/{{ticket.id}}">{{ ticket.title }}</a></h3>
         <p>{{ ticket.description }}</p>
         <p>Status: In Progress</p>
-        <p>Assigned to: <a href="/user/{{ticket.assigned_user.id}}">{{ ticket.assigned_user }}</a></p>
-        <p>Filed by: <a href="/user/{{ticket.filing_user.id}}">{{ ticket.filing_user }}</a></p>
-        <p><a href="/edit/{{tickets.id}}">Edit this ticket...</a></p>
+        <p>Assigned to: <a href="/authorsview/{{ticket.ticket_assignee.id}}">{{ ticket.ticket_assignee }}</a></p>
+        <p>Filed by: <a href="/authorsview/{{ticket.ticket_finisher.id}}">{{ ticket.ticket_finisher }}</a></p>
+        <p><a href="/edit/{{ticket.id}}/">EDIT TICKET</a></p>
+        <a href="/invalid/{{ticket.id}}/"/> <button> MAKE INVALID </button> </p> 
+        <a href="/finished/{{ticket.id}}/"/> <button> MARK COMPLETE </button> </p> 
+
     {% endfor %}
 
+<br>
+<br>
 
 <h2>Completed Tickets</h2>
-    {% for tickets in finished %}
+    {% for ticket in finished %}
         <h3><a href="/ticket/{{ticket.id}}">{{ ticket.title }}</a></h3>
         <p>{{ ticket.description }}</p>
         <p>Status: Completed</p>
-        <p>Assigned to: {{ ticket.assigned_user }}</p>
-        <p>Filed by: <a href="/user/{{ticket.filing_user.id}}">{{ ticket.filing_user }}</a></p>
-        <p>Completed by: <a href="/user/{{ticket.completed_user.id}}">{{ ticket.completed_user }}</a></p>
-        <p><a href="/edit/{{tickets.id}}">Edit this ticket...</a></p>
+        <p>Assigned to: {{ ticket.ticket_assignee }}</p>
+        <p>Filed by: <a href="/authorsview/{{ticket.ticket_finisher.id}}">{{ ticket.ticket_finisher }}</a></p>
+        <p>Completed by: <a href="/authorsview/{{ticket.completed_user.id}}">{{ ticket.completed_user }}</a></p>
+        <p><a href="/edit/{{ticket.id}}">EDIT TICKET</a></p>
     {% endfor %}
 
-    
+<br>
+<br>  
+
 <h2>Invalid Tickets</h2>
     {% for ticket in invalid %}
+    {{ticket}}
         <h3><a href="/ticket/{{ticket.id}}">{{ ticket.title }}</a></h3>
         <p>{{ ticket.description }}</p>
-        <p>Status: {{ticket.ticket_status}}</p>
-        <p>Assigned to: {{ ticket.assigned_user }}</p>
-        <p>Filed by: <a href="/user/{{ticket.title.id}}">{{ ticket.assigned_user }}</a></p>
-        <p><a href="/edit/{{tickets.id}}">Edit this ticket...</a></p>
+        <p>Status: {{ticket.ticket_status}}
+        <p>Assigned to: {{ ticket.ticket_assignee }}</p>
+        <p>Filed by: <a href="/authorsview/{{ticket.title.id}}">{{ ticket.ticket_assignee }}</a></p>
+        <p><a href="/edit/{{ticket.id}}/">EDIT TICKET</a></p>
+         
+<br>
+<br>
 
-        <a href="logout/">Logout</a>
+        
 
     {% endfor %}
 {% endif %}
+<a href="logout/">Logout</a>

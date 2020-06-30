@@ -25,13 +25,6 @@ def index(request):
 
 
 @login_required
-def authorslist(request):
-    html = 'authorslist.html'
-    authors = MyUser.objects.all()
-    return render(request, html, {'authors': authors})
-
-
-@login_required
 def authorsview(request, id):
     html = 'authorsview.html'
     name = MyUser.objects.filter(id=id)
@@ -40,7 +33,7 @@ def authorsview(request, id):
     filed = tickets.filter(author=id)
     finished = tickets.filter(ticket_finisher=id)
 
-    return HttpResponseRedirect(request, html, {
+    return render(request, html, {
         'name': name, 'working': working,
         'filed': filed,
         'finished': finished})
@@ -49,14 +42,14 @@ def authorsview(request, id):
 @login_required
 def info(request, id):
     html = "ticketinfo.html"
-    detail = Ticket.objects.filter(id=id)
-    return render(request, html, {'data': detail})
+    detail = Ticket.objects.get(id=id)
+    return render(request, html, {'detail': detail})
 
 
 @login_required
 def addticket(request):
     form = None
-    html = "addticket.html"
+    html = "genericform.html"
 
     if request.method == 'POST':
         form = Ticketadd(request.POST)
@@ -68,7 +61,7 @@ def addticket(request):
                 author=request.user,
                 description=data['description'],
             )
-            return render(request, 'completed.html')
+            return HttpResponseRedirect(reverse('homepage'))
     else:
         form = Ticketadd()
     return render(request, html, {"form": form})
@@ -77,7 +70,7 @@ def addticket(request):
 @login_required
 def register(request):
     form = None
-    html = "adduser.html"
+    html = "genericform.html"
 
     if request.method == "POST":
         form = Adduser(request.POST)
@@ -88,7 +81,7 @@ def register(request):
                 username=data['username'],
                 password=data['password']
             )
-        return render(request, 'completed.html')
+        return HttpResponseRedirect(reverse('homepage'))
     else:
         form = Adduser()
     return render(request, html, {"form": form})
@@ -97,14 +90,13 @@ def register(request):
 @login_required
 def editticket(request, id):
     form = None
-    html = 'editticket.html'
-    instance = Ticket.objects.get(pk=id)
+    html = 'genericform.html'
+    instance = Ticket.objects.get(id=id)
     if request.method == "POST":
         form = Edit(request.POST, instance=instance)
-
         if form.is_valid():
             form.save()
-        return reverse('/')
+        return HttpResponseRedirect(reverse('homepage'))
     else:
         form = Edit(instance=instance)
         return render(request, html, {'form': form})
@@ -112,11 +104,11 @@ def editticket(request, id):
 
 def logout_view(request):
     logout(request)
-    return reverse('/')
+    return HttpResponseRedirect(reverse('homepage'))
 
 
-def login(request):
-    html = 'login.html'
+def login_view(request):
+    html = 'genericform.html'
     form = Login()
     if request.method == "POST":
         form = Login(request.POST)
@@ -128,14 +120,14 @@ def login(request):
             print(user)
             if user:
                 dj_login(request, user)
-            return HttpResponseRedirect(request.GET.get('next', 'homepage'))
+            return HttpResponseRedirect(request.GET.get('next', reverse('homepage')))
     return render(request, html, {'form': form})
 
 
 @login_required
 def inprogress(request, id):
-    ticket = Ticket.objects.get(pk=id)
-    ticket.ticket_status = "ip"
+    ticket = Ticket.objects.get(id=id)
+    ticket.ticket_status = "In progress"
     ticket.ticket_assignee = request.user
     ticket.ticket_finisher = None
     ticket.save()
@@ -144,18 +136,18 @@ def inprogress(request, id):
 
 @login_required
 def invalid(request, id):
-    ticket = Ticket.objects.get(pk=id)
-    ticket.ticket_status = "iv"
+    ticket = Ticket.objects.get(id=id)
+    ticket.ticket_status = "Invalid"
     ticket.ticket_assignee = None
     ticket.ticket_finisher = None
     ticket.save()
-    return HttpResponseRedirect(reverse('ticket', args=(id,)))
+    return HttpResponseRedirect(reverse('homepage'))
 
 
 @login_required
 def finished(request, id):
-    ticket = Ticket.objects.get(pk=id)
-    ticket.ticket_status = "f"
+    ticket = Ticket.objects.get(id=id)
+    ticket.ticket_status = "Finished"
     ticket.ticket_finisher = ticket.ticket_assignee
     ticket.ticket_assignee = None
     ticket.save()
