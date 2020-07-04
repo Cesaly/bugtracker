@@ -27,8 +27,8 @@ class Ticket(models.Model):
         (IN, 'Invalid'),
     ]
     ticket_status = models.CharField(max_length=40, choices=ticket_status_choices, default=NEW)
-    ticket_assignee = models.ForeignKey(MyUser, null=True, related_name='ticketassignee', on_delete=models.CASCADE)
-    ticket_finisher = models.ForeignKey(MyUser, related_name='ticketfinisher', null=True, on_delete=models.CASCADE)
+    ticket_person = models.ForeignKey(MyUser, null=True, related_name='ticketperson', on_delete=models.CASCADE)
+    ticket_done_by = models.ForeignKey(MyUser, related_name='ticketdone_by', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title

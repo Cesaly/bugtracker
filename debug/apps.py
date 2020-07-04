@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class BugtrackerConfig(AppConfig):
-    name = 'bugtrackerapp'
+    name = 'debug'

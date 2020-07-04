@@ -1,7 +1,7 @@
 from django.shortcuts import render, reverse, HttpResponseRedirect
-from bugtrackerapp.forms import Login
-from bugtrackerapp.models import Ticket, MyUser
-from bugtrackerapp.forms import Ticketadd, Edit, Adduser
+from debug.forms import Login
+from debug.models import Ticket, MyUser
+from debug.forms import Ticketadd, Edit, Adduser
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as dj_login, logout
 
@@ -14,7 +14,6 @@ def index(request):
     invalid = Ticket.objects.filter(ticket_status=Ticket.IN)
     new = Ticket.objects.filter(ticket_status='New')
     finished = Ticket.objects.filter(ticket_status=Ticket.F)
-    print(Ticket.objects.get(title='add this'))
     # breakpoint()
 
     return render(request, html, {
@@ -29,9 +28,9 @@ def authorsview(request, id):
     html = 'authorsview.html'
     name = MyUser.objects.filter(id=id)
     tickets = Ticket.objects.all()
-    working = tickets.filter(ticket_assignee=id)
+    working = tickets.filter(ticket_person=id)
     filed = tickets.filter(author=id)
-    finished = tickets.filter(ticket_finisher=id)
+    finished = tickets.filter(ticket_done_by=id)
 
     return render(request, html, {
         'name': name, 'working': working,
@@ -67,7 +66,7 @@ def addticket(request):
     return render(request, html, {"form": form})
 
 
-@login_required
+
 def register(request):
     form = None
     html = "genericform.html"
@@ -128,8 +127,8 @@ def login_view(request):
 def inprogress(request, id):
     ticket = Ticket.objects.get(id=id)
     ticket.ticket_status = "In progress"
-    ticket.ticket_assignee = request.user
-    ticket.ticket_finisher = None
+    ticket.ticket_person = request.user
+    ticket.ticket_done_by = None
     ticket.save()
     return HttpResponseRedirect(reverse('ticket', args=(id,)))
 
@@ -138,8 +137,8 @@ def inprogress(request, id):
 def invalid(request, id):
     ticket = Ticket.objects.get(id=id)
     ticket.ticket_status = "Invalid"
-    ticket.ticket_assignee = None
-    ticket.ticket_finisher = None
+    ticket.ticket_person = None
+    ticket.ticket_done_by = None
     ticket.save()
     return HttpResponseRedirect(reverse('homepage'))
 
@@ -148,7 +147,7 @@ def invalid(request, id):
 def finished(request, id):
     ticket = Ticket.objects.get(id=id)
     ticket.ticket_status = "Finished"
-    ticket.ticket_finisher = ticket.ticket_assignee
-    ticket.ticket_assignee = None
+    ticket.ticket_done_by = ticket.ticket_person
+    ticket.ticket_person = None
     ticket.save()
     return HttpResponseRedirect(reverse('homepage'))

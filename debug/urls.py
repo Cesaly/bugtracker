@@ -1,5 +1,5 @@
 from django.urls import path
-from bugtrackerapp import views
+from debug import views
 
 urlpatterns = [
     path('', views.index, name='homepage'),

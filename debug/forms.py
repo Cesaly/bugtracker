@@ -17,7 +17,7 @@ class Login(forms.Form):
 class Edit(ModelForm):
     class Meta:
         model = Ticket
-        fields = ['title', 'description', 'ticket_status', 'ticket_assignee']
+        fields = ['title', 'description', 'ticket_status', 'ticket_person']
 
 
 class Adduser(forms.Form):

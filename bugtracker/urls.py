@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from bugtrackerapp.urls import urlpatterns as bugtracker
+from debug.urls import urlpatterns as bugtracker
 
 
 urlpatterns = [
